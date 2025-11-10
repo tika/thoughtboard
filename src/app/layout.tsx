@@ -10,9 +10,11 @@ import {
 } from "@clerk/nextjs";
 
 // Import css
-import "./globals.css";
 import "@radix-ui/themes/styles.css";
+import "./globals.css";
+
 import { Theme } from "@radix-ui/themes";
+import Link from "next/link";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -31,8 +33,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  post,
 }: Readonly<{
   children: React.ReactNode;
+  post: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
@@ -40,7 +44,16 @@ export default function RootLayout({
         <body
           className={`${publicSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Theme>{children}</Theme>
+          <Theme appearance="dark" accentColor="mint" radius="full">
+            <nav>
+              <Link href="/post">Open modal</Link>
+            </nav>
+            <div>{post}</div>
+            <div>{children}</div>
+
+            {/*{modal}
+            {children}*/}
+          </Theme>
         </body>
       </html>
     </ClerkProvider>

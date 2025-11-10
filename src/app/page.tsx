@@ -5,21 +5,21 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { Button, Text } from "@radix-ui/themes";
 
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-screen bg-stone-950">
+      <Text size="6">thoughtboard</Text>
+
+      <Button>Post</Button>
+
       <SignedOut>
         <SignInButton />
         <SignUpButton>
-          <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-            Sign Up
-          </button>
+          <Button>Sign Up</Button>
         </SignUpButton>
       </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
     </div>
   );
 }

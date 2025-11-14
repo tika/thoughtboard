@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/conn";
-import { remarkTable } from "@/db/schema";
+import { reflectionTable, remarkTable } from "@/db/schema";
 import type { IdSchema, UserIdSchema } from "@/lib/utils";
 import type {
   CreateRemarkSchema,
@@ -48,7 +48,8 @@ async function getRemarksByUserId({ id }: UserIdSchema) {
   const remarks = await db
     .select()
     .from(remarkTable)
-    .where(eq(remarkTable.userId, id));
+    .where(eq(remarkTable.userId, id))
+    .leftJoin(reflectionTable, eq(remarkTable.id, reflectionTable.remarkId));
 
   return remarks;
 }

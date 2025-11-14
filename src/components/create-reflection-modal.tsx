@@ -22,13 +22,17 @@ import { Textarea } from "./ui/textarea";
 
 interface CreateReflectionModalProps {
   remark: Remark;
+  trigger: React.ReactNode;
 }
 
 const createReflectionFormSchema = z.object({
   content: z.string().min(140),
 });
 
-export function CreateReflectionModal({ remark }: CreateReflectionModalProps) {
+export function CreateReflectionModal({
+  remark,
+  trigger,
+}: CreateReflectionModalProps) {
   const { user } = useUser();
   const form = useForm<z.infer<typeof createReflectionFormSchema>>({
     resolver: zodResolver(createReflectionFormSchema),
@@ -63,7 +67,7 @@ export function CreateReflectionModal({ remark }: CreateReflectionModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create Reflection</Button>
+        {trigger ?? <Button>Create Reflection</Button>}
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Create Reflection</DialogTitle>

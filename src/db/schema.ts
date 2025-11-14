@@ -6,8 +6,10 @@ export const remarkTable = pgTable("remark", {
   id: text()
     .$defaultFn(() => createId())
     .primaryKey(),
-  createdTs: timestamp("created_ts").defaultNow(),
-  updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
+  createdTs: timestamp("created_ts").notNull().defaultNow(),
+  updatedTs: timestamp("updated_ts")
+    .notNull()
+    .$onUpdate(() => new Date()),
   userId: text("user_id").notNull(),
   content: varchar("content", { length: 280 }).notNull(),
 });
@@ -17,8 +19,10 @@ export const reflectionTable = pgTable("reflection", {
   id: text()
     .$defaultFn(() => createId())
     .primaryKey(),
-  createdTs: timestamp("created_ts").defaultNow(),
-  updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
+  createdTs: timestamp("created_ts").notNull().defaultNow(),
+  updatedTs: timestamp("updated_ts")
+    .notNull()
+    .$onUpdate(() => new Date()),
   content: text("content").notNull(),
   remarkId: text("remark_id")
     .references(() => remarkTable.id)

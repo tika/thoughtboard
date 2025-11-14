@@ -11,4 +11,3 @@ export const deleteRemarkSchema = z.object({
   remarkId: z.cuid(),
 });
 export type DeleteRemarkSchema = z.infer<typeof deleteRemarkSchema>;
-

@@ -1,6 +1,10 @@
 "use client";
 
-import { PostEditor } from "@/components/post-editor";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import z from "zod";
+import { client } from "@/lib/orpc";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,10 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
-import z from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldError, FieldGroup } from "./ui/field";
 import { Textarea } from "./ui/textarea";
 
@@ -28,9 +28,11 @@ export function PostModal() {
     },
   });
 
-  function submitHandler(data: z.infer<typeof createPostFormSchema>) {
+  async function submitHandler(data: z.infer<typeof createPostFormSchema>) {
     // TODO: create API call to create post
     console.log(data);
+    const a = await client.sayHello({ name: data.content });
+    console.log(a);
   }
 
   return (
@@ -64,7 +66,7 @@ export function PostModal() {
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button type="submit" form="post-editor-form">
-              Save changes
+              Post
             </Button>
           </DialogFooter>
         </form>

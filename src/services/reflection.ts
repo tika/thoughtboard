@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/conn";
-import { reflectionTable, remarkTable } from "@/db/schema";
+import { reflectionTable } from "@/db/schema";
 import type { IdSchema } from "@/lib/utils";
 import type {
   CreateReflectionSchema,
@@ -10,7 +10,7 @@ import { remarkService } from "@/services/remark";
 
 async function createReflection(input: CreateReflectionSchema) {
   // Ensure Remark doesn't already have a reflection and belongs to the user
-  const remark = await remarkService.getRemarkById({ id: input.remarkId });
+  const remark = await remarkService.getById({ id: input.remarkId });
 
   if (!remark) {
     throw new Error("Remark not found");

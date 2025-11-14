@@ -1,4 +1,4 @@
-import { PostModal } from "@/components/post-modal";
+import { PostModal } from "@/components/create-remark-modal";
 
 export default function PostPage() {
   return (

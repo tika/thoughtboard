@@ -35,8 +35,6 @@ export function PostModal() {
   async function submitHandler(data: z.infer<typeof createPostFormSchema>) {
     if (!user?.id) return;
 
-    // TODO: create API call to create post
-    console.log(data);
     const newRemark = client.remark.create({
       content: data.content,
       userId: user.id,

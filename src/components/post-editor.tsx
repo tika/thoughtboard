@@ -1,8 +1,9 @@
 "use client";
 
-import { Text, TextArea, TextField } from "@radix-ui/themes";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Flex, Text, TextArea } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const createPostSchema = z.object({
@@ -18,10 +19,15 @@ const placeholderChoices = [
 
 export function PostEditor() {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof createPostSchema>>();
+  } = useForm<z.infer<typeof createPostSchema>>({
+    resolver: zodResolver(createPostSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
   const [placeholder, setPlaceholder] = useState<string>(placeholderChoices[0]);
 
   useEffect(() => {
@@ -33,18 +39,27 @@ export function PostEditor() {
 
   function submitHandler(values: z.infer<typeof createPostSchema>) {
     // TODO: create API call to create post
+    console.log(values);
   }
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
-      <TextArea placeholder={placeholder} {...register("content")} />
-      {errors.content && (
-        <Text size="2" color="red">
-          {errors.content.message}
-        </Text>
-      )}
+      <Flex direction="column" gap="3">
+        <Controller
+          name="content"
+          control={control}
+          render={({ field }) => (
+            <TextArea placeholder={placeholder} rows={4} {...field} />
+          )}
+        />
+        {errors.content && (
+          <Text size="2" color="red">
+            {errors.content.message}
+          </Text>
+        )}
 
-      <input type="submit" />
+        <Button type="submit">Post</Button>
+      </Flex>
     </form>
   );
 }

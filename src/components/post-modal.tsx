@@ -1,24 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { Button, Dialog } from "@radix-ui/themes";
 import { PostEditor } from "@/components/post-editor";
 
-export function Modal({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-
+export function PostModal() {
   return (
-    <>
-      <button
-        onClick={() => {
-          router.back();
-        }}
-      >
-        Close modal
-      </button>
-      <div>
-        {children}
+    <Dialog.Root>
+      <Dialog.Trigger>
+        <Button>Post Thought</Button>
+      </Dialog.Trigger>
+
+      <Dialog.Content maxWidth="450px">
         <PostEditor />
-      </div>
-    </>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

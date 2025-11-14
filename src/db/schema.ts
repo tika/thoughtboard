@@ -1,7 +1,7 @@
+import { createId } from "@paralleldrive/cuid2";
 import {
   integer,
   pgTable,
-  serial,
   text,
   timestamp,
   varchar,
@@ -9,16 +9,20 @@ import {
 
 // A small comment, tweet
 export const remarkTable = pgTable("remark", {
-  id: serial("id").primaryKey(),
+  id: text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
   createdTs: timestamp("created_ts").defaultNow(),
   updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
-  userId: text("user_id"),
+  userId: text("user_id").notNull(),
   content: varchar("content", { length: 280 }).notNull(),
 });
 
 // A blog post stemming from that tweet, optionally
 export const reflectionTable = pgTable("reflection", {
-  id: serial("id").primaryKey(),
+  id: text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
   createdTs: timestamp("created_ts").defaultNow(),
   updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
   content: text("content").notNull(),

@@ -1,65 +1,46 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Text, TextArea } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { Field, FieldError, FieldGroup } from "./ui/field";
+import { Textarea } from "./ui/textarea";
 
-const createPostSchema = z.object({
+const createPostFormSchema = z.object({
   content: z.string().min(1).max(255),
 });
 
-const placeholderChoices = [
-  "What's on your mind?",
-  "I'm feeling grateful for...",
-  "TIL: ",
-  "It's seriously underrated...",
-];
-
 export function PostEditor() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof createPostSchema>>({
-    resolver: zodResolver(createPostSchema),
+  const form = useForm<z.infer<typeof createPostFormSchema>>({
+    resolver: zodResolver(createPostFormSchema),
     defaultValues: {
       content: "",
     },
   });
-  const [placeholder, setPlaceholder] = useState<string>(placeholderChoices[0]);
 
-  useEffect(() => {
-    // Only set random placeholder on client after hydration
-    setPlaceholder(
-      placeholderChoices[Math.floor(Math.random() * placeholderChoices.length)],
-    );
-  }, []);
-
-  function submitHandler(values: z.infer<typeof createPostSchema>) {
+  function submitHandler(data: z.infer<typeof createPostFormSchema>) {
     // TODO: create API call to create post
-    console.log(values);
+    console.log(data);
   }
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
-      <Flex direction="column" gap="3">
+    <form onSubmit={form.handleSubmit(submitHandler)} id="post-editor-form">
+      <FieldGroup>
         <Controller
           name="content"
-          control={control}
-          render={({ field }) => (
-            <TextArea placeholder={placeholder} rows={4} {...field} />
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <Textarea
+                {...field}
+                aria-invalid={fieldState.invalid}
+                placeholder="Write something..."
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
-        {errors.content && (
-          <Text size="2" color="red">
-            {errors.content.message}
-          </Text>
-        )}
-
-        <Button type="submit">Post</Button>
-      </Flex>
+      </FieldGroup>
     </form>
   );
 }

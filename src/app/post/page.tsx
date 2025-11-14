@@ -1,6 +1,6 @@
-import { Text } from "@radix-ui/themes";
 import { PostEditor } from "@/components/post-editor";
+import { PostModal } from "@/components/post-modal";
 
 export default function PostPage() {
-  return <PostEditor />;
+  return <PostModal />;
 }

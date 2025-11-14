@@ -37,16 +37,18 @@ export function PostModal() {
 
     // TODO: create API call to create post
     console.log(data);
-    const newRemark = await client.remark.create({
+    const newRemark = client.remark.create({
       content: data.content,
       userId: user.id,
     });
 
-    console.log(newRemark);
+    toast.promise(newRemark, {
+      loading: "Creating remark...",
+      success: (data) => `Remark created successfully: ${data.content}`,
+      error: "Failed to create remark",
+    });
 
     form.reset();
-
-    toast.success("Remark created successfully");
   }
 
   return (

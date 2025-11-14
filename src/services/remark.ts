@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/conn";
 import { remarkTable } from "@/db/schema";
-import type { IdSchema } from "@/lib/utils";
+import type { IdSchema, UserIdSchema } from "@/lib/utils";
 import type {
   CreateRemarkSchema,
   DeleteRemarkSchema,
@@ -44,7 +44,7 @@ async function deleteRemark(input: DeleteRemarkSchema) {
 }
 
 // Get all remarks for a user
-async function getRemarksByUserId({ id }: IdSchema) {
+async function getRemarksByUserId({ id }: UserIdSchema) {
   const remarks = await db
     .select()
     .from(remarkTable)

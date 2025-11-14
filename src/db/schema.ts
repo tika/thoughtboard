@@ -20,7 +20,9 @@ export const reflectionTable = pgTable("reflection", {
   createdTs: timestamp("created_ts").defaultNow(),
   updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
   content: text("content").notNull(),
-  remarkId: text("remark_id").references(() => remarkTable.id),
+  remarkId: text("remark_id")
+    .references(() => remarkTable.id)
+    .unique(),
 });
 
 export type Remark = typeof remarkTable.$inferSelect;

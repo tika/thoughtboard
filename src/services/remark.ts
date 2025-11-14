@@ -54,8 +54,8 @@ async function getRemarksByUserId({ id }: UserIdSchema) {
 }
 
 export const remarkService = {
-  createRemark,
-  getRemarkById,
-  deleteRemark,
-  getRemarksByUserId,
+  create: createRemark,
+  getById: getRemarkById,
+  delete: deleteRemark,
+  getByUserId: getRemarksByUserId,
 };

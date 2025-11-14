@@ -1,17 +1,11 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
+import { Landing } from "@/app/landing";
 import { Feed } from "@/components/feed";
 import { Button } from "@/components/ui/button";
 
 export default async function Home() {
   return (
     <div className="min-h-screen">
-      <p>thoughtboard</p>
       <SignedIn>
         <SignOutButton>
           <Button>Sign Out</Button>
@@ -20,12 +14,7 @@ export default async function Home() {
       </SignedIn>
 
       <SignedOut>
-        <SignInButton>
-          <Button>Sign In</Button>
-        </SignInButton>
-        <SignUpButton>
-          <Button>Sign Up</Button>
-        </SignUpButton>
+        <Landing />
       </SignedOut>
     </div>
   );

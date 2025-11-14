@@ -39,11 +39,7 @@ export function DisplayRemark({
       <CreateReflectionModal
         remark={remark}
         trigger={
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled={remark.reflectionId !== null}
-          >
+          <Button variant="ghost" size="icon" disabled={reflectionId !== null}>
             <NotebookPenIcon />
           </Button>
         }

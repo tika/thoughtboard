@@ -1,11 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import {
-  integer,
-  pgTable,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 // A small comment, tweet
 export const remarkTable = pgTable("remark", {
@@ -26,7 +20,7 @@ export const reflectionTable = pgTable("reflection", {
   createdTs: timestamp("created_ts").defaultNow(),
   updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
   content: text("content").notNull(),
-  remarkId: integer("remark_id").references(() => remarkTable.id),
+  remarkId: text("remark_id").references(() => remarkTable.id),
 });
 
 export type Remark = typeof remarkTable.$inferSelect;

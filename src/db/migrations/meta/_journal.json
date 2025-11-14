@@ -15,6 +15,13 @@
       "when": 1763095037713,
       "tag": "0001_misty_salo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1763096181782,
+      "tag": "0002_even_nextwave",
+      "breakpoints": true
     }
   ]
 }

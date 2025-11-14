@@ -7,13 +7,13 @@ import {
 } from "@/services/remark";
 
 export const remarkRouter = {
-  createRemark: os.input(editRemarkSchema).handler(async ({ input }) => {
+  create: os.input(editRemarkSchema).handler(async ({ input }) => {
     return await remarkService.createRemark(input);
   }),
-  getRemarkById: os.input(idSchema).handler(async ({ input }) => {
+  getById: os.input(idSchema).handler(async ({ input }) => {
     return await remarkService.getRemarkById({ id: input.id });
   }),
-  deleteRemark: os.input(deleteRemarkSchema).handler(async ({ input }) => {
+  delete: os.input(deleteRemarkSchema).handler(async ({ input }) => {
     return await remarkService.deleteRemark(input);
   }),
 };

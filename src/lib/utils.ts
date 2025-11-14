@@ -10,4 +10,5 @@ export function cn(...inputs: ClassValue[]) {
 export const idSchema = z.object({
   id: z.cuid(),
 });
+export type IdSchema = z.infer<typeof idSchema>;
 export const remarkSchema = z.string().min(1).max(280);

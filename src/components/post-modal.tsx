@@ -1,9 +1,12 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { client } from "@/lib/orpc";
+import { remarkSchema } from "@/lib/utils";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -17,10 +20,11 @@ import { Field, FieldError, FieldGroup } from "./ui/field";
 import { Textarea } from "./ui/textarea";
 
 const createPostFormSchema = z.object({
-  content: z.string().min(1).max(255),
+  content: remarkSchema,
 });
 
 export function PostModal() {
+  const { user } = useUser();
   const form = useForm<z.infer<typeof createPostFormSchema>>({
     resolver: zodResolver(createPostFormSchema),
     defaultValues: {
@@ -29,10 +33,20 @@ export function PostModal() {
   });
 
   async function submitHandler(data: z.infer<typeof createPostFormSchema>) {
+    if (!user?.id) return;
+
     // TODO: create API call to create post
     console.log(data);
-    const a = await client.sayHello({ name: data.content });
-    console.log(a);
+    const newRemark = await client.remark.create({
+      content: data.content,
+      userId: user.id,
+    });
+
+    console.log(newRemark);
+
+    form.reset();
+
+    toast.success("Remark created successfully");
   }
 
   return (

@@ -1,61 +1,61 @@
 import { eq } from "drizzle-orm";
-import { z } from "zod";
 import { db } from "@/db/conn";
 import { remarkTable } from "@/db/schema";
-import type { idSchema } from "@/lib/utils";
+import type { IdSchema } from "@/lib/utils";
+import type {
+  CreateRemarkSchema,
+  DeleteRemarkSchema,
+} from "@/server/schemas/remark.schema";
 
-export const editRemarkSchema = z.object({
-  content: z.string().min(1).max(280),
-  userId: z.cuid(),
-});
-
-async function createRemark(input: z.infer<typeof editRemarkSchema>) {
-  const data = editRemarkSchema.parse(input);
-
+async function createRemark(input: CreateRemarkSchema) {
   const newRemark = await db
     .insert(remarkTable)
     .values({
-      content: data.content,
-      userId: data.userId,
+      content: input.content,
+      userId: input.userId,
     })
     .returning();
 
   return newRemark[0];
 }
 
-async function getRemarkById(values: z.infer<typeof idSchema>) {
+async function getRemarkById({ id }: IdSchema) {
   const remark = await db
     .select()
     .from(remarkTable)
-    .where(eq(remarkTable.id, values.id))
+    .where(eq(remarkTable.id, id))
     .limit(1);
 
   return remark[0] ?? null;
 }
 
-export const deleteRemarkSchema = z.object({
-  userId: z.cuid(),
-  remarkId: z.cuid(),
-});
-
-async function deleteRemark(input: z.infer<typeof deleteRemarkSchema>) {
-  const data = deleteRemarkSchema.parse(input);
-
+async function deleteRemark(input: DeleteRemarkSchema) {
   // Ensure user owns remark
-  const remark = await getRemarkById({ id: data.remarkId });
+  const remark = await getRemarkById({ id: input.remarkId });
 
   if (!remark) {
     throw new Error("Remark not found");
   }
 
-  if (remark.userId !== data.userId)
+  if (remark.userId !== input.userId)
     throw new Error("User does not own remark");
 
-  await db.delete(remarkTable).where(eq(remarkTable.id, data.remarkId));
+  await db.delete(remarkTable).where(eq(remarkTable.id, input.remarkId));
+}
+
+// Get all remarks for a user
+async function getRemarksByUserId({ id }: IdSchema) {
+  const remarks = await db
+    .select()
+    .from(remarkTable)
+    .where(eq(remarkTable.userId, id));
+
+  return remarks;
 }
 
 export const remarkService = {
   createRemark,
   getRemarkById,
   deleteRemark,
+  getRemarksByUserId,
 };

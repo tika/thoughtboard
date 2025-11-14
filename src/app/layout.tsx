@@ -5,6 +5,7 @@ import "@/lib/orpc.server"; // for pre-rendering
 
 // Import css
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -33,7 +34,8 @@ export default function RootLayout({
           className={`${publicSans.variable} ${geistMono.variable} antialiased dark`}
         >
           <div className="root">
-            <div>{children}</div>
+            <main>{children}</main>
+            <Toaster />
           </div>
         </body>
       </html>

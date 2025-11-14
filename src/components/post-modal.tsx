@@ -41,7 +41,7 @@ export function PostModal() {
         <Button>Post</Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>Post</DialogTitle>
+        <DialogTitle>Post Remark</DialogTitle>
         <form onSubmit={form.handleSubmit(submitHandler)} id="post-editor-form">
           <FieldGroup>
             <Controller
@@ -66,7 +66,7 @@ export function PostModal() {
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button type="submit" form="post-editor-form">
-              Post
+              Post Remark
             </Button>
           </DialogFooter>
         </form>

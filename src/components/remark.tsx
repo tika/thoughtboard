@@ -1,7 +1,8 @@
 import Avatar from "boring-avatars";
-import { NotebookPenIcon, PencilIcon } from "lucide-react";
+import { ArrowUpRightIcon, NotebookPenIcon } from "lucide-react";
+import Link from "next/link";
 import { CreateReflectionModal } from "@/components/create-reflection-modal";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -14,7 +15,7 @@ export function DisplayRemark({
   remark,
   reflectionId,
 }: {
-  remark: Remark;
+  remark: Remark & { profile: { handle: string } };
   reflectionId: string | null;
 }) {
   return (
@@ -36,14 +37,27 @@ export function DisplayRemark({
           </Tooltip>
         </div>
       </div>
-      <CreateReflectionModal
-        remark={remark}
-        trigger={
-          <Button variant="ghost" size="icon" disabled={reflectionId !== null}>
-            <NotebookPenIcon />
-          </Button>
-        }
-      />
+      {reflectionId === null ? (
+        <CreateReflectionModal
+          remark={remark}
+          trigger={
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={reflectionId !== null}
+            >
+              <NotebookPenIcon />
+            </Button>
+          }
+        />
+      ) : (
+        <Link
+          href={`/${remark.handle}/${reflectionId}`}
+          className={buttonVariants({ variant: "ghost", size: "icon" })}
+        >
+          <ArrowUpRightIcon />
+        </Link>
+      )}
     </div>
   );
 }

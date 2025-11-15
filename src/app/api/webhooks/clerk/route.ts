@@ -52,18 +52,9 @@ export async function POST(req: Request) {
     }
 
     try {
-      // Create profile in database
+      // Create profile in database, this will also set the default metadata
       await profileService.findOrCreateProfile(id);
-      console.log(`Created profile for user ${id}`);
-
-      // Update Clerk metadata
-      const client = await clerkClient();
-      await client.users.updateUser(id, {
-        privateMetadata: {
-          onboardingStep: "welcome",
-        },
-      } satisfies ClerkMetadata);
-      console.log(`Set default metadata for user ${id}`);
+      console.log(`Created profile & set default metadata for user ${id}`);
     } catch (err) {
       console.error("Error creating profile or updating metadata:", err);
       return new Response(

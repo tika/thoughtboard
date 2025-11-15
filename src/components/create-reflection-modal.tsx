@@ -95,6 +95,7 @@ export function CreateReflectionModal({
               )}
             />
           </FieldGroup>
+          <p>Min count: {form.watch("content").length} / 140</p>
           <DialogFooter className="mt-5">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>

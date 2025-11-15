@@ -2,7 +2,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DisplayRemark } from "@/components/remark";
 import { client } from "@/lib/orpc";
-import { CreateReflectionModal } from "./create-reflection-modal";
 
 export async function Feed() {
   // Get remarks and render
@@ -17,10 +16,12 @@ export async function Feed() {
       {remarks.map((remark) => (
         <div key={remark.remark.id}>
           <DisplayRemark
-            remark={remark.remark}
+            remark={{
+              ...remark.remark,
+              profile: { handle: user.publicMetadata.handle as string },
+            }}
             reflectionId={remark.reflection?.id ?? null}
           />
-          {/* <CreateReflectionModal remark={remark} /> */}
         </div>
       ))}
     </div>

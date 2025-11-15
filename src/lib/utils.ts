@@ -21,6 +21,9 @@ export const remarkSchema = z.string().min(1).max(280);
 
 // Define rigid metadata for Clerk users
 export type ClerkMetadata = {
+  publicMetadata: {
+    handle: string;
+  };
   privateMetadata: {
     onboardingStep: OnboardingStep;
   };

@@ -143,9 +143,20 @@ async function updateAvatar(input: UpdateAvatarSchema) {
   return updatedProfile;
 }
 
+async function getProfileByHandle(handle: string) {
+  const [profile] = await db
+    .select()
+    .from(profileTable)
+    .where(eq(profileTable.handle, handle))
+    .limit(1);
+
+  return profile ?? null;
+}
+
 export const profileService = {
   findOrCreateProfile,
   checkHandleAvailability,
   updateHandle,
   updateAvatar,
+  getProfileByHandle,
 };

@@ -3,6 +3,7 @@ import { cuidSchema, userIdSchema } from "@/lib/utils";
 import {
   createRemarkSchema,
   deleteRemarkSchema,
+  getReadyForReflectionSchema,
 } from "@/server/schemas/remark.schema";
 import { remarkService } from "@/services/remark";
 
@@ -19,6 +20,13 @@ export const remarkRouter = {
   getByUserId: os.input(userIdSchema).handler(async ({ input }) => {
     return await remarkService.getByUserId({ id: input.id });
   }),
+  getReadyForReflection: os
+    .input(getReadyForReflectionSchema)
+    .handler(async ({ input }) => {
+      return await remarkService.getReadyForReflection({
+        userId: input.userId,
+      });
+    }),
 };
 
 export type RemarkRouter = typeof remarkRouter;

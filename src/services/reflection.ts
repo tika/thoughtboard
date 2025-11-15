@@ -35,6 +35,15 @@ async function getReflectionByRemarkId({ id }: IdSchema) {
   return reflection;
 }
 
+async function getReflectionById({ id }: IdSchema) {
+  const [reflection] = await db
+    .select()
+    .from(reflectionTable)
+    .where(eq(reflectionTable.id, id))
+    .limit(1);
+  return reflection ?? null;
+}
+
 async function updateReflection(input: UpdateReflectionSchema) {
   const reflection = await getReflectionByRemarkId({ id: input.remarkId });
   if (!reflection) {
@@ -51,5 +60,6 @@ async function updateReflection(input: UpdateReflectionSchema) {
 export const reflectionService = {
   create: createReflection,
   getByRemarkId: getReflectionByRemarkId,
+  getById: getReflectionById,
   update: updateReflection,
 };

@@ -13,6 +13,9 @@ export const reflectionRouter = {
   getByRemarkId: os.input(cuidSchema).handler(async ({ input }) => {
     return await reflectionService.getByRemarkId({ id: input.id });
   }),
+  getById: os.input(cuidSchema).handler(async ({ input }) => {
+    return await reflectionService.getById({ id: input.id });
+  }),
   update: os.input(updateReflectionSchema).handler(async ({ input }) => {
     return await reflectionService.update(input);
   }),

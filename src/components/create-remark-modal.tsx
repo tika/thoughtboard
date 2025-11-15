@@ -23,7 +23,11 @@ const createPostFormSchema = z.object({
   content: remarkSchema,
 });
 
-export function PostModal() {
+interface PostModalProps {
+  trigger?: React.ReactNode;
+}
+
+export function PostModal({ trigger }: PostModalProps = {}) {
   const { user } = useUser();
   const form = useForm<z.infer<typeof createPostFormSchema>>({
     resolver: zodResolver(createPostFormSchema),
@@ -51,9 +55,7 @@ export function PostModal() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button>Post</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger ?? <Button>Post</Button>}</DialogTrigger>
       <DialogContent>
         <DialogTitle>Post Remark</DialogTitle>
         <form onSubmit={form.handleSubmit(submitHandler)} id="post-editor-form">

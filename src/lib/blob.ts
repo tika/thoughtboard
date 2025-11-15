@@ -5,7 +5,7 @@ export async function createAvatarUploadUrl(file: File, userId: string) {
   formData.append("file", file);
 
   const timestamp = new Date().toISOString();
-  const extension = file.name.split('.').pop() || 'jpg';
+  const extension = file.name.split(".").pop() || "jpg";
   const filename = `avatars/${userId}/${timestamp}.${extension}`;
   formData.append("filename", filename);
 

@@ -11,6 +11,11 @@ export default async function OnboardingPage() {
 
   const profile = await profileService.findOrCreateProfile(user.id);
 
+  // If already completed, redirect to main app
+  if (profile.onboardingStep === "completed") {
+    redirect("/");
+  }
+
   // Redirect to the current step or welcome if not started
   const step = profile.onboardingStep || "welcome";
   redirect(`/onboarding/${step}`);

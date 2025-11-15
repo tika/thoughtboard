@@ -52,7 +52,7 @@ export function DisplayRemark({
         />
       ) : (
         <Link
-          href={`/${remark.handle}/${reflectionId}`}
+          href={`/${remark.profile.handle}/${reflectionId}`}
           className={buttonVariants({ variant: "ghost", size: "icon" })}
         >
           <ArrowUpRightIcon />

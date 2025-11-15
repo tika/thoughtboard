@@ -30,6 +30,11 @@ export const profileRouter = {
   updateAvatar: os.input(updateAvatarSchema).handler(async ({ input }) => {
     return await profileService.updateAvatar(input);
   }),
+  getByHandle: os
+    .input(z.object({ handle: z.string() }))
+    .handler(async ({ input }) => {
+      return await profileService.getProfileByHandle(input.handle);
+    }),
 };
 
 export type ProfileRouter = typeof profileRouter;

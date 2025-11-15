@@ -8,10 +8,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const filename = formData.get("filename") as string;
 
     if (!file) {
-      return NextResponse.json(
-        { error: "No file provided" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     if (!filename) {
@@ -30,9 +27,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     console.error("Error uploading file:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to upload file" },
+      {
+        error: error instanceof Error ? error.message : "Failed to upload file",
+      },
       { status: 500 },
     );
   }
 }
-

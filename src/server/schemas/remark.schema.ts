@@ -8,6 +8,13 @@ export type CreateRemarkSchema = z.infer<typeof createRemarkSchema>;
 
 export const deleteRemarkSchema = z.object({
   userId: z.string(),
-  remarkId: z.cuid(),
+  remarkId: z.cuid2(),
 });
 export type DeleteRemarkSchema = z.infer<typeof deleteRemarkSchema>;
+
+export const getReadyForReflectionSchema = z.object({
+  userId: z.string(),
+});
+export type GetReadyForReflectionSchema = z.infer<
+  typeof getReadyForReflectionSchema
+>;

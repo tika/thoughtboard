@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // Utility for simple ID validation. Do not use with user ids
 export const cuidSchema = z.object({
-  id: z.cuid(),
+  id: z.cuid2(),
 });
 export type IdSchema = z.infer<typeof cuidSchema>;
 export const userIdSchema = z.object({

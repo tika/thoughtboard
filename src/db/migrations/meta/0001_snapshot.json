@@ -55,9 +55,7 @@
         "profile_handle_unique": {
           "name": "profile_handle_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "handle"
-          ]
+          "columns": ["handle"]
         }
       },
       "policies": {},
@@ -106,12 +104,8 @@
           "name": "reflection_remark_id_remark_id_fk",
           "tableFrom": "reflection",
           "tableTo": "remark",
-          "columnsFrom": [
-            "remark_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["remark_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -121,9 +115,7 @@
         "reflection_remark_id_unique": {
           "name": "reflection_remark_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "remark_id"
-          ]
+          "columns": ["remark_id"]
         }
       },
       "policies": {},
@@ -172,12 +164,8 @@
           "name": "remark_user_id_profile_id_fk",
           "tableFrom": "remark",
           "tableTo": "profile",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -193,12 +181,7 @@
     "public.onboarding_step": {
       "name": "onboarding_step",
       "schema": "public",
-      "values": [
-        "welcome",
-        "handle",
-        "avatar",
-        "completed"
-      ]
+      "values": ["welcome", "handle", "avatar", "completed"]
     }
   },
   "schemas": {},

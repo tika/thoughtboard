@@ -1,8 +1,14 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { profileService } from "@/services/profile";
 
 export default async function CompletedPage() {
@@ -69,4 +75,3 @@ export default async function CompletedPage() {
     </div>
   );
 }
-

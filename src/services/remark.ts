@@ -1,10 +1,11 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull, lt } from "drizzle-orm";
 import { db } from "@/db/conn";
 import { reflectionTable, remarkTable } from "@/db/schema";
 import type { IdSchema, UserIdSchema } from "@/lib/utils";
 import type {
   CreateRemarkSchema,
   DeleteRemarkSchema,
+  GetReadyForReflectionSchema,
 } from "@/server/schemas/remark.schema";
 import { profileService } from "./profile";
 
@@ -58,9 +59,34 @@ async function getRemarksByUserId({ id }: UserIdSchema) {
   return remarks;
 }
 
+// Get the oldest remark ready for reflection (3+ days old, no reflection)
+async function getReadyForReflection({ userId }: GetReadyForReflectionSchema) {
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+  const remarks = await db
+    .select({
+      remark: remarkTable,
+    })
+    .from(remarkTable)
+    .leftJoin(reflectionTable, eq(remarkTable.id, reflectionTable.remarkId))
+    .where(
+      and(
+        eq(remarkTable.userId, userId),
+        lt(remarkTable.createdTs, threeDaysAgo),
+        isNull(reflectionTable.remarkId),
+      ),
+    )
+    .orderBy(remarkTable.createdTs)
+    .limit(1);
+
+  return remarks[0]?.remark ?? null;
+}
+
 export const remarkService = {
   create: createRemark,
   getById: getRemarkById,
   delete: deleteRemark,
   getByUserId: getRemarksByUserId,
+  getReadyForReflection,
 };

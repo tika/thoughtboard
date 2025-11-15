@@ -1,1 +1,0 @@
-ALTER TABLE "reflection" ADD CONSTRAINT "reflection_remark_id_unique" UNIQUE("remark_id");

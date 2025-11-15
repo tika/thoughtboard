@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1762753262319,
-      "tag": "0000_wealthy_justin_hammer",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1763095037713,
-      "tag": "0001_misty_salo",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1763096181782,
-      "tag": "0002_even_nextwave",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1763098015302,
-      "tag": "0003_careful_master_mold",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1763100238526,
-      "tag": "0004_natural_fallen_one",
+      "when": 1763181989964,
+      "tag": "0000_previous_sister_grimm",
       "breakpoints": true
     }
   ]

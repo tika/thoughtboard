@@ -1,7 +1,6 @@
-import { clerkClient, type WebhookEvent } from "@clerk/nextjs/server";
+import type { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
-import type { ClerkMetadata } from "@/lib/utils";
 import { profileService } from "@/services/profile";
 
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;

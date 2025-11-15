@@ -1,7 +1,7 @@
 import { clerkClient } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db } from "@/db/conn";
-import { profileTable } from "@/db/schema";
+import { type OnboardingStep, profileTable } from "@/db/schema";
 import type { ClerkMetadata } from "@/lib/utils";
 import type {
   UpdateAvatarSchema,
@@ -14,6 +14,46 @@ async function updateClerkMetadata(
 ) {
   const clerk = await clerkClient();
   return clerk.users.updateUser(clerkId, metadata);
+}
+
+async function advanceOnboardingStep(clerkId: string) {
+  const steps = ["welcome", "handle", "avatar", "completed"]; // in order
+
+  // Get current profile to find the current step
+  const [profile] = await db
+    .select()
+    .from(profileTable)
+    .where(eq(profileTable.id, clerkId));
+
+  if (!profile) {
+    throw new Error("Profile not found");
+  }
+
+  const currentStep = profile.onboardingStep;
+  const currentIndex = steps.indexOf(currentStep);
+
+  // If already at the last step or step not found, don't advance
+  if (currentIndex === -1 || currentIndex === steps.length - 1) {
+    return profile;
+  }
+
+  const nextStep = steps[currentIndex + 1] as OnboardingStep;
+
+  // Update database
+  const [updatedProfile] = await db
+    .update(profileTable)
+    .set({ onboardingStep: nextStep })
+    .where(eq(profileTable.id, clerkId))
+    .returning();
+
+  // Update Clerk metadata
+  await updateClerkMetadata(clerkId, {
+    privateMetadata: {
+      onboardingStep: nextStep,
+    },
+  });
+
+  return updatedProfile;
 }
 
 async function findOrCreateProfile(clerkId: string) {
@@ -40,7 +80,29 @@ async function findOrCreateProfile(clerkId: string) {
   return newProfile;
 }
 
+async function checkHandleAvailability(
+  handle: string,
+  excludeUserId?: string,
+): Promise<boolean> {
+  let query = db.select().from(profileTable);
+
+  // Exclude the current user's handle if provided
+  if (excludeUserId) {
+    query = query.where(
+      and(eq(profileTable.handle, handle), ne(profileTable.id, excludeUserId)),
+    ) as typeof query;
+  } else {
+    query = query.where(eq(profileTable.handle, handle)) as typeof query;
+  }
+
+  const [existing] = await query.limit(1);
+
+  return !existing;
+}
+
 async function updateHandle(input: UpdateHandleSchema) {
+  // If already completed, don't update onboarding
+
   const [updatedProfile] = await db
     .update(profileTable)
     .set({
@@ -65,7 +127,10 @@ async function updateHandle(input: UpdateHandleSchema) {
 async function updateAvatar(input: UpdateAvatarSchema) {
   const [updatedProfile] = await db
     .update(profileTable)
-    .set({ avatarUrl: input.avatarUrl, onboardingStep: "completed" })
+    .set({
+      avatarUrl: input.avatarUrl || null,
+      onboardingStep: "completed",
+    })
     .where(eq(profileTable.id, input.clerkId))
     .returning();
 
@@ -80,6 +145,7 @@ async function updateAvatar(input: UpdateAvatarSchema) {
 
 export const profileService = {
   findOrCreateProfile,
+  checkHandleAvailability,
   updateHandle,
   updateAvatar,
 };

@@ -1,21 +1,24 @@
-// Utilities for uploading to Vercel blob storage. Client-side
+// Utilities for uploading to Vercel blob storage via API route
 
-import { upload } from "@vercel/blob/client";
-import mime from "mime/lite";
-
-export async function createAvatarUploadUrl(file: Blob, userId: string) {
-  const extension = mime.getExtension(file.type);
+export async function createAvatarUploadUrl(file: File, userId: string) {
+  const formData = new FormData();
+  formData.append("file", file);
 
   const timestamp = new Date().toISOString();
-  const res = await upload(
-    `avatars/${userId}/${timestamp}.${extension}`,
-    file,
-    {
-      access: "public",
-      contentType: file.type,
-      handleUploadUrl: "/api/avatar/upload",
-    },
-  );
+  const extension = file.name.split('.').pop() || 'jpg';
+  const filename = `avatars/${userId}/${timestamp}.${extension}`;
+  formData.append("filename", filename);
 
-  return res.url;
+  const response = await fetch("/api/avatar/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to upload avatar");
+  }
+
+  const data = await response.json();
+  return data.url;
 }

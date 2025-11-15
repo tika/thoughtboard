@@ -9,10 +9,10 @@ export function Landing() {
         <p>microblogging for the modern age</p>
       </div>
       <div className="flex gap-2">
-        <SignInButton>
+        <SignInButton afterSignInUrl="/onboarding">
           <Button variant="outline">Sign In</Button>
         </SignInButton>
-        <SignUpButton>
+        <SignUpButton afterSignUpUrl="/onboarding">
           <Button>Sign Up</Button>
         </SignUpButton>
       </div>

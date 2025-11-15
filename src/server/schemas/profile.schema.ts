@@ -13,7 +13,7 @@ export const updateHandleSchema = z.object({
 });
 
 export const updateAvatarSchema = z.object({
-  avatarUrl: z.url(),
+  avatarUrl: z.union([z.url(), z.null()]),
   clerkId: z.string(),
 });
 

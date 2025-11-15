@@ -1,6 +1,7 @@
 import Avatar from "boring-avatars";
 import { ArrowUpRightIcon, NotebookPenIcon } from "lucide-react";
 import Link from "next/link";
+import { ProfileAvatar } from "@/components/avatar";
 import { CreateReflectionModal } from "@/components/create-reflection-modal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -15,12 +16,17 @@ export function DisplayRemark({
   remark,
   reflectionId,
 }: {
-  remark: Remark & { profile: { handle: string } };
+  remark: Remark & { profile: { handle: string; avatarUrl: string | null } };
   reflectionId: string | null;
 }) {
   return (
     <div className="flex gap-2">
-      <Avatar name={remark.userId} />
+      <ProfileAvatar
+        profile={{
+          handle: remark.profile.handle,
+          avatarUrl: remark.profile.avatarUrl,
+        }}
+      />
 
       <div className="flex flex-col items-start">
         <p>{remark.content}</p>

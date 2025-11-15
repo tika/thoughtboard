@@ -27,7 +27,7 @@ export default async function ProfilePage({
           <DisplayRemark
             remark={{
               ...remark.remark,
-              profile: { handle },
+              profile: { handle, avatarUrl: profile.avatarUrl },
             }}
             reflectionId={remark.reflection?.id ?? null}
           />

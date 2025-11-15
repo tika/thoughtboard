@@ -9,6 +9,13 @@ export default async function ReflectionPage({
 }) {
   const { handle, reflectionId } = await params;
 
+  // Get profile by handle to verify ownership
+  const profile = await client.profile.getByHandle({ handle });
+
+  if (!profile) {
+    notFound();
+  }
+
   const reflection = await client.reflection.getById({ id: reflectionId });
 
   if (!reflection) {
@@ -19,6 +26,11 @@ export default async function ReflectionPage({
   const remark = await remarkService.getById({ id: reflection.remarkId ?? "" });
 
   if (!remark) {
+    notFound();
+  }
+
+  // Verify that the remark belongs to the profile (handle owner)
+  if (remark.userId !== profile.id) {
     notFound();
   }
 

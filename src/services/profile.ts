@@ -1,14 +1,11 @@
-import { put } from "@vercel/blob";
 import { eq } from "drizzle-orm";
-import mime from "mime/lite";
 import { db } from "@/db/conn";
 import { profileTable } from "@/db/schema";
 import type {
+  UpdateAvatarSchema,
   UpdateHandleSchema,
-  UploadAvatarSchema,
-} from "@/server/schemas/profile.schema"; // Schema names are fine
+} from "@/server/schemas/profile.schema";
 
-// Finds a profile by its Clerk ID or creates a new one.
 async function findOrCreateProfile(clerkId: string) {
   const [profile] = await db
     .select()
@@ -19,7 +16,6 @@ async function findOrCreateProfile(clerkId: string) {
     return profile;
   }
 
-  // Profile doesn't exist, create one
   const [newProfile] = await db
     .insert(profileTable)
     .values({ id: clerkId, onboardingStep: "welcome" })
@@ -28,37 +24,31 @@ async function findOrCreateProfile(clerkId: string) {
   return newProfile;
 }
 
-async function updateHandle(clerkId: string, input: UpdateHandleSchema) {
+async function updateHandle(input: UpdateHandleSchema) {
   const [updatedProfile] = await db
     .update(profileTable)
     .set({
       handle: input.handle,
-      onboardingStep: "avatar", // Advance to next step
+      onboardingStep: "avatar",
     })
-    .where(eq(profileTable.id, clerkId))
+    .where(eq(profileTable.id, input.clerkId))
     .returning();
   return updatedProfile;
 }
 
-// Generates a secure URL for the client to upload a blob.
-async function createAvatarUploadUrl(input: UploadAvatarSchema) {
-  const extension = mime.getExtension(input.mimeType);
-  const timestamp = new Date().toISOString();
-  const blob = await put(
-    `avatars/${input.userId}/${timestamp}.${extension}`,
-    "",
-    {
-      access: "public",
-      addRandomSuffix: true,
-      contentType: input.contentType,
-    },
-  );
+async function updateAvatar(input: UpdateAvatarSchema) {
+  const [updatedProfile] = await db
+    .update(profileTable)
+    .set({ avatarUrl: input.avatarUrl, onboardingStep: "completed" })
+    .where(eq(profileTable.id, input.clerkId))
+    .returning();
 
-  return blob;
+  
+  return updatedProfile;
 }
 
 export const profileService = {
   findOrCreateProfile,
   updateHandle,
-  createAvatarUploadUrl,
+  updateAvatar,
 };

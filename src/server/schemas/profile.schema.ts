@@ -9,13 +9,13 @@ export const updateHandleSchema = z.object({
       /^[a-z0-9_]+$/,
       "Handle can only contain lowercase letters, numbers, and underscores",
     ),
+  clerkId: z.string(),
 });
 
-export const uploadAvatarSchema = z.object({
-  userId: z.string(),
-  mimeType: z.string(),
-  contentType: z.string(),
+export const updateAvatarSchema = z.object({
+  avatarUrl: z.url(),
+  clerkId: z.string(),
 });
 
 export type UpdateHandleSchema = z.infer<typeof updateHandleSchema>;
-export type UploadAvatarSchema = z.infer<typeof uploadAvatarSchema>;
+export type UpdateAvatarSchema = z.infer<typeof updateAvatarSchema>;

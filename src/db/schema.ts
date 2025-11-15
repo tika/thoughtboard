@@ -46,8 +46,10 @@ export const profileTable = pgTable("profile", {
   onboardingStep: onboardingStepEnum("onboarding_step")
     .default("welcome")
     .notNull(),
-  createdTs: timestamp("created_ts").defaultNow(),
-  updatedTs: timestamp("updated_ts").$onUpdate(() => new Date()),
+  createdTs: timestamp("created_ts").notNull().defaultNow(),
+  updatedTs: timestamp("updated_ts")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 export type Remark = typeof remarkTable.$inferSelect;
@@ -56,5 +58,19 @@ export type RemarkCreate = typeof remarkTable.$inferInsert;
 export type Reflection = typeof reflectionTable.$inferSelect;
 export type ReflectionCreate = typeof reflectionTable.$inferInsert;
 
-export type Profile = typeof profileTable.$inferSelect;
+export type OnboardingStep = (typeof onboardingStepEnum.enumValues)[number];
+
+type DbProfile = typeof profileTable.$inferSelect;
 export type ProfileCreate = typeof profileTable.$inferInsert;
+
+type IncompleteProfile = DbProfile & {
+  onboardingStep: Omit<OnboardingStep, "completed">;
+};
+
+// Use this when you know the profile is complete
+export type CompletedProfile = DbProfile & {
+  onboardingStep: "completed";
+  handle: string;
+};
+
+export type Profile = IncompleteProfile | CompletedProfile;

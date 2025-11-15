@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { differenceInSeconds, formatDistanceToNow } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
+import type { OnboardingStep } from "@/db/schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,6 +18,13 @@ export const userIdSchema = z.object({
 });
 export type UserIdSchema = z.infer<typeof userIdSchema>;
 export const remarkSchema = z.string().min(1).max(280);
+
+// Define rigid metadata for Clerk users
+export type ClerkMetadata = {
+  privateMetadata: {
+    onboardingStep: OnboardingStep;
+  };
+};
 
 /**
  * Formats a timestamp for display

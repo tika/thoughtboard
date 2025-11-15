@@ -6,8 +6,12 @@ import type {
   CreateRemarkSchema,
   DeleteRemarkSchema,
 } from "@/server/schemas/remark.schema";
+import { profileService } from "./profile";
 
 async function createRemark(input: CreateRemarkSchema) {
+  // Ensure profile exists before creating remark
+  await profileService.findOrCreateProfile(input.userId);
+
   const newRemark = await db
     .insert(remarkTable)
     .values({

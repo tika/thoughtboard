@@ -13,7 +13,9 @@ async function createRemark(input: CreateRemarkSchema) {
   // Ensure profile exists before creating remark
   await profileService.findOrCreateProfile(input.userId);
 
+  // Standard ephemeral Remark creation
   // If remark is created without a reflection, set expiresAt to 72 hours from now
+  // Remarks with URLs are still ephemeral - Reflections are created manually later
   const expiresAt = input.reflectionId
     ? undefined
     : new Date(Date.now() + 72 * 60 * 60 * 1000);

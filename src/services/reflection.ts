@@ -27,6 +27,25 @@ async function createReflection(input: CreateReflectionSchema) {
   return newReflection[0];
 }
 
+async function createMediaReflection(input: {
+  userId: string;
+  mediaUrl: string;
+  content?: string;
+}) {
+  // Create Media Reflection without requiring remarkId initially
+  // Content can be empty for Media Reflections initially
+  const newReflection = await db
+    .insert(reflectionTable)
+    .values({
+      type: "media",
+      mediaUrl: input.mediaUrl,
+      content: input.content || "",
+    })
+    .returning();
+
+  return newReflection[0];
+}
+
 async function getReflectionByRemarkId({ id }: IdSchema) {
   const reflection = await db
     .select()
@@ -59,6 +78,7 @@ async function updateReflection(input: UpdateReflectionSchema) {
 
 export const reflectionService = {
   create: createReflection,
+  createMediaReflection,
   getByRemarkId: getReflectionByRemarkId,
   getById: getReflectionById,
   update: updateReflection,

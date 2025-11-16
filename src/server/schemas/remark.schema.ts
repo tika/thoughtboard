@@ -4,6 +4,8 @@ export const createRemarkSchema = z.object({
   content: z.string().min(1).max(280),
   userId: z.string(),
   reflectionId: z.string().optional(),
+  mediaUrl: z.string().url().optional(),
+  reflectionType: z.enum(["media"]).optional(),
 });
 export type CreateRemarkSchema = z.infer<typeof createRemarkSchema>;
 

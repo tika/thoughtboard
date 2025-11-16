@@ -1,4 +1,4 @@
-import { and, eq, isNull, lt } from "drizzle-orm";
+import { and, eq, gt, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import { db } from "@/db/conn";
 import { reflectionTable, remarkTable } from "@/db/schema";
 import type { IdSchema, UserIdSchema } from "@/lib/utils";
@@ -13,11 +13,18 @@ async function createRemark(input: CreateRemarkSchema) {
   // Ensure profile exists before creating remark
   await profileService.findOrCreateProfile(input.userId);
 
+  // If remark is created without a reflection, set expiresAt to 72 hours from now
+  const expiresAt = input.reflectionId
+    ? undefined
+    : new Date(Date.now() + 72 * 60 * 60 * 1000);
+
   const newRemark = await db
     .insert(remarkTable)
     .values({
       content: input.content,
       userId: input.userId,
+      reflectionId: input.reflectionId,
+      expiresAt,
     })
     .returning();
 
@@ -28,7 +35,16 @@ async function getRemarkById({ id }: IdSchema) {
   const remark = await db
     .select()
     .from(remarkTable)
-    .where(eq(remarkTable.id, id))
+    .where(
+      and(
+        eq(remarkTable.id, id),
+        // Filter out expired remarks: keep if reflectionId exists OR expiresAt is in the future
+        or(
+          isNotNull(remarkTable.reflectionId),
+          gt(remarkTable.expiresAt, sql`now()`),
+        ),
+      ),
+    )
     .limit(1);
 
   return remark[0] ?? null;
@@ -53,7 +69,16 @@ async function getRemarksByUserId({ id }: UserIdSchema) {
   const remarks = await db
     .select()
     .from(remarkTable)
-    .where(eq(remarkTable.userId, id))
+    .where(
+      and(
+        eq(remarkTable.userId, id),
+        // Filter out expired remarks: keep if reflectionId exists OR expiresAt is in the future
+        or(
+          isNotNull(remarkTable.reflectionId),
+          gt(remarkTable.expiresAt, sql`now()`),
+        ),
+      ),
+    )
     .leftJoin(reflectionTable, eq(remarkTable.id, reflectionTable.remarkId));
 
   return remarks;
@@ -75,6 +100,8 @@ async function getReadyForReflection({ userId }: GetReadyForReflectionSchema) {
         eq(remarkTable.userId, userId),
         lt(remarkTable.createdTs, threeDaysAgo),
         isNull(reflectionTable.remarkId),
+        // Filter out expired remarks: only get remarks that haven't expired yet
+        gt(remarkTable.expiresAt, sql`now()`),
       ),
     )
     .orderBy(remarkTable.createdTs)

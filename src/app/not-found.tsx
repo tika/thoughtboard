@@ -14,19 +14,21 @@ export default function NotFound() {
       <Card className="w-full max-w-md text-center">
         <CardHeader>
           <CardTitle className="text-4xl font-bold">404</CardTitle>
-          <CardDescription className="text-lg">
-            Page not found
-          </CardDescription>
+          <CardDescription className="text-lg">Page not found</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-muted-foreground">
-            The page you&apos;re looking for doesn&apos;t exist or has been moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been
+            moved.
           </p>
           <div className="flex flex-col gap-2">
             <Link href="/">
               <Button className="w-full">Go Home</Button>
             </Link>
-            <Link href="/" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Return to thoughtboard
             </Link>
           </div>
@@ -35,4 +37,3 @@ export default function NotFound() {
     </div>
   );
 }
-

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { DisplayRemark } from "@/components/remark";
 import { client } from "@/lib/orpc";
 import { profileService } from "@/services/profile";
-import { CompletedProfile } from '@/db/schema';
+import { CompletedProfile } from "@/db/schema";
 
 export async function Feed() {
   // Get remarks and render
